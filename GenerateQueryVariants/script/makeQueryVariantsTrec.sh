@@ -24,10 +24,11 @@ then
     exit 1;
 fi
 
-indexPath=`readlink -f $1`              # absolute address of the index
+# indexPath=`readlink -f $1`              # absolute address of the index
+indexPath=`realpath -s $1`              # absolute address of the index
 indexpath=$indexPath"/"
-queryPath=`readlink -f $2`		# absolute address of the query file
-resPath=`readlink -f $3`		# absolute directory path of the .res file
+queryPath=`realpath -s $2`		# absolute address of the query file
+resPath=`realpath -s $3`		# absolute directory path of the .res file
 resPath=$resPath"/"
 queryName=$(basename $queryPath)
 qtermNN=$5
