@@ -73,18 +73,18 @@ public class TRECQueryParse extends DefaultHandler {
        queryParser = new StandardQueryParser(this.analyzer);
     }
     
-    /**
-     * Parses the query file from xml format using SAXParser;
-     * 'queries' list gets initialized with the queries 
-     * (with title, desc, narr and qid in different place holders)
-     * @throws Exception 
-     */
-    public void queryFileParse() throws Exception {
-        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        SAXParser saxParser = saxParserFactory.newSAXParser();
+    // /**
+    //  * Parses the query file from xml format using SAXParser;
+    //  * 'queries' list gets initialized with the queries 
+    //  * (with title, desc, narr and qid in different place holders)
+    //  * @throws Exception 
+    //  */
+    // public void queryFileParse() throws Exception {
+    //     SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+    //     SAXParser saxParser = saxParserFactory.newSAXParser();
 
-        saxParser.parse(queryFilePath, this);
-    }
+    //     saxParser.parse(queryFilePath, this);
+    // }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -121,35 +121,35 @@ public class TRECQueryParse extends DefaultHandler {
         buff.append(new String(ch, start, length));
     }
 
-    public Query getAnalyzedQuery(TRECQuery trecQuery) throws Exception {
+    // public Query getAnalyzedQuery(TRECQuery trecQuery) throws Exception {
 
-        trecQuery.qtitle = trecQuery.qtitle.replaceAll("-", " ");
-        Query luceneQuery = queryParser.parse(trecQuery.qtitle.replaceAll("/", " ")
-            .replaceAll("\\?", " ").replaceAll("\"", " ").replaceAll("\\&", " "), fieldToSearch);
-        trecQuery.luceneQuery = luceneQuery;
+    //     trecQuery.qtitle = trecQuery.qtitle.replaceAll("-", " ");
+    //     Query luceneQuery = queryParser.parse(trecQuery.qtitle.replaceAll("/", " ")
+    //         .replaceAll("\\?", " ").replaceAll("\"", " ").replaceAll("\\&", " "), fieldToSearch);
+    //     trecQuery.luceneQuery = luceneQuery;
         
-        return luceneQuery;
-    }
+    //     return luceneQuery;
+    // }
 
-    public Query getAnalyzedQuery(TRECQuery trecQuery, int queryFieldFlag) throws Exception {
+    // public Query getAnalyzedQuery(TRECQuery trecQuery, int queryFieldFlag) throws Exception {
 
-        String queryString = "";
-        trecQuery.qtitle = trecQuery.qtitle.replaceAll("-", " ");
-        queryString = trecQuery.qtitle.replaceAll("/", " ")
-            .replaceAll("\\?", " ").replaceAll("\"", " ").replaceAll("\\&", " ");
+    //     String queryString = "";
+    //     trecQuery.qtitle = trecQuery.qtitle.replaceAll("-", " ");
+    //     queryString = trecQuery.qtitle.replaceAll("/", " ")
+    //         .replaceAll("\\?", " ").replaceAll("\"", " ").replaceAll("\\&", " ");
 
-        if(queryFieldFlag == 2) {
-            trecQuery.qdesc = trecQuery.qdesc.replaceAll("-", " ");
-            queryString += " ";
-            queryString += trecQuery.qdesc.replaceAll("/", " ").replaceAll(":", " ")
-            .replaceAll("\\?", " ").replaceAll("\"", " ").replaceAll("\\&", " ");
-        }
+    //     if(queryFieldFlag == 2) {
+    //         trecQuery.qdesc = trecQuery.qdesc.replaceAll("-", " ");
+    //         queryString += " ";
+    //         queryString += trecQuery.qdesc.replaceAll("/", " ").replaceAll(":", " ")
+    //         .replaceAll("\\?", " ").replaceAll("\"", " ").replaceAll("\\&", " ");
+    //     }
 
-        Query luceneQuery = queryParser.parse(queryString, fieldToSearch);
-        trecQuery.luceneQuery = luceneQuery;
+    //     Query luceneQuery = queryParser.parse(queryString, fieldToSearch);
+    //     trecQuery.luceneQuery = luceneQuery;
 
-        return luceneQuery;
-    }
+    //     return luceneQuery;
+    // }
 
     public Query getAnalyzedQuery(String queryString) throws Exception {
 
@@ -161,15 +161,15 @@ public class TRECQueryParse extends DefaultHandler {
         return luceneQuery;
     }
 
-    public Query getAnalyzedQuery(TRECQuery trecQuery, String field) throws Exception {
+    // public Query getAnalyzedQuery(TRECQuery trecQuery, String field) throws Exception {
 
-        trecQuery.qtitle = trecQuery.qtitle.replaceAll("-", " ");
-        Query luceneQuery = queryParser.parse(trecQuery.qtitle.replaceAll("/", " ")
-            .replaceAll("\\?", " ").replaceAll("\"", " ").replaceAll("\\&", " "), field);
-        trecQuery.luceneQuery = luceneQuery;
+    //     trecQuery.qtitle = trecQuery.qtitle.replaceAll("-", " ");
+    //     Query luceneQuery = queryParser.parse(trecQuery.qtitle.replaceAll("/", " ")
+    //         .replaceAll("\\?", " ").replaceAll("\"", " ").replaceAll("\\&", " "), field);
+    //     trecQuery.luceneQuery = luceneQuery;
 
-        return luceneQuery;
-    }
+    //     return luceneQuery;
+    // }
 
     public List<TRECQuery> constructQueries() throws Exception {
 

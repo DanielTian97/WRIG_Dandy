@@ -56,7 +56,8 @@ public class GenerateQueryVariantsTrec {
     String           queryPath;
     File             queryFile;
     TRECQueryParse   trecQueryparser;
-    List<TRECQuery>  queries;
+    // List<TRECQuery>  queries;
+    List<String>     queries;
     String           qtermNN;
     String           varGen;
     int              varLen;
@@ -120,9 +121,18 @@ public class GenerateQueryVariantsTrec {
         
         /* constructing TREC queries */
         trecQueryparser = new TRECQueryParse(queryPath, analyzer, fieldToSearch);
-        queries = constructQueries();
+        // queries = constructQueries(); 
         /* constructed TREC query */
-        
+        // change to List<String>
+        queries = new List<String>();
+        String line;
+        try(FileReader fr = new FileReader(queryPath);
+            BufferReader br = new BufferReader(fr); ) {
+                while((line = br.readLine()) != null) {
+                    storeRetRcd(line);
+                }
+            }
+      
         qtermNN = prop.getProperty("qtermNN");
         System.out.println("Nearest Neighbour path set to : " + qtermNN);
         
@@ -138,7 +148,7 @@ public class GenerateQueryVariantsTrec {
         System.out.println("Maximum length of a query variant : " + varLen);
         
         qvrlm = new CreateQueryVariantsRLM(this);
-//        qvwv = new CreateQueryVariantsW2V(this);
+        qvwv = new CreateQueryVariantsW2V(this);
         
         /* setting res path */
         setRunName_ResFileName();
@@ -180,17 +190,17 @@ public class GenerateQueryVariantsTrec {
     } // ends setSimilarityFunction()
     
     
-    /**
-     * Parses the query from the file and makes a List<TRECQuery> 
-     *  containing all the queries (RAW query read)
-     * @return A list with the all the queries
-     * @throws Exception 
-     */
-    private List<TRECQuery> constructQueries() throws Exception {
+    // /**
+    //  * Parses the query from the file and makes a List<TRECQuery> 
+    //  *  containing all the queries (RAW query read)
+    //  * @return A list with the all the queries
+    //  * @throws Exception 
+    //  */
+    // private List<TRECQuery> constructQueries() throws Exception {
 
-        trecQueryparser.queryFileParse();
-        return trecQueryparser.queries;
-    } // ends constructQueries()
+    //     trecQueryparser.queryFileParse();
+    //     return trecQueryparser.queries;
+    // } // ends constructQueries()
     
     
     /**
@@ -206,10 +216,17 @@ public class GenerateQueryVariantsTrec {
             resPath = "/home/suchana/";
         else
             resPath = prop.getProperty("resPath");
-        resPath = resPath + runName + "_v10_ot2.variants";
+        resPath = resPath + runName + ".variants";
     } // ends setRunName_ResFileName()
     
-    
+    private void storeRetRcd(String line){
+        String[] tokens = line.split("\t");
+        String qid = tokens[0];
+        String qText = tokens[1];
+
+        this.queries.add(qText);
+    }
+
     public void makeQueryVariants() throws Exception {
         
         TopDocs topRetDocs;
@@ -217,11 +234,11 @@ public class GenerateQueryVariantsTrec {
         TopScoreDocCollector collector;
         List<String> queryVariantList = new ArrayList<>();
         
-        for (TRECQuery query : queries) {
+        for (String query : queries) { // need to change to List<String>
             
             collector = TopScoreDocCollector.create(numFeedbackDocs);
             Query luceneQuery = trecQueryparser.getAnalyzedQuery(query);
-            System.out.println("\n" + query.qid +": Initial query: " + luceneQuery.toString(fieldToSearch));
+            // System.out.println("\n" + query.qid +": Initial query: " + luceneQuery.toString(fieldToSearch));
             
             /* initial retrieval performed */
             indexSearcher.search(luceneQuery, collector);
@@ -259,7 +276,7 @@ public class GenerateQueryVariantsTrec {
                     queryVariantList = qvrlm.createVariantsRLMTrec(topRetDocs, luceneQuery, varLen);
 //                    resBuffer.append(query.qid).append(" ::: ").append(luceneQuery.toString(fieldToSearch)).append("\n");
                     for (String variant : queryVariantList)
-                        resBuffer.append(query.qid).append("\t").
+                        resBuffer.append(query).append("\t"). // now query is a string
                                 append(variant).append("\n");
                     resFileWriter.write(resBuffer.toString());
                     resFileWriter.close();
@@ -270,7 +287,7 @@ public class GenerateQueryVariantsTrec {
                     queryVariantList = qvwv.createVariantsW2VTrec(luceneQuery, varLen);
 //                    resBuffer.append(query.qid).append(" ::: ").append(luceneQuery.toString(fieldToSearch)).append("\n");
                     for (String variant : queryVariantList)
-                        resBuffer.append(query.qid).append("\t").
+                        resBuffer.append(query).append("\t"). // now query is a string
                                 append(variant).append("\n");
                     resFileWriter.write(resBuffer.toString());
                     resFileWriter.close();
