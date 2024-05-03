@@ -2,7 +2,7 @@
 
 cd ../
 
-stopFilePath="/home/suchana/smart-stopwords"
+stopFilePath="./ingredients/smart-stopwords"
 if [ ! -f $stopFilePath ]
 then
     echo "Please ensure that the path of the stopword-list-file is set in the .sh file."
@@ -14,7 +14,7 @@ if [ $# -le 5 ]
 then
     echo "Usage: " $0 " <following arguments in the order>";
     echo "1. Path of the index.";
-    echo "2. Path of the TREC query.xml file."
+    echo "2. Path of the TREC query file (text file)."
     echo "3. Path of the directory to store .res file."
     echo "4. SimilarityFunction: 0.DefaultSimilarity, 1.BM25Similarity, 2.LMJelinekMercerSimilarity, 3.LMDirichletSimilarity."
     echo "5. Path of the Nearest Neighbour file (valid path if variants to be generated using W2V; otherwise 0)"
